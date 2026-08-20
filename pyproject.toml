@@ -1,0 +1,20 @@
+[project]
+name = "dayinml"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Jivan Enriquez", email = "FerdinandoJr.Enriquez@student.uts.edu.au" }
+]
+requires-python = ">=3.12.13"
+dependencies = [
+    "pandas==2.2.2",
+    "scikit-learn==1.5.1",
+]
+
+[project.scripts]
+dayinml = "dayinml:main"
+
+[build-system]
+requires = ["uv_build>=0.12.0,<0.13.0"]
+build-backend = "uv_build"
