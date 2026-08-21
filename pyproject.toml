@@ -1,6 +1,6 @@
 [project]
 name = "dayinml"
-version = "0.1.3"
+version = "0.1.4"
 description = "Add your description here"
 readme = "README.md"
 authors = [
@@ -9,7 +9,7 @@ authors = [
 requires-python = ">=3.12.13"
 dependencies = [
     "pandas==2.2.2",
-    "scikit-learn==1.5.1",
+    "scikit-learn==1.6.1",
 ]
 
 [project.scripts]
