@@ -6,8 +6,9 @@ readme = "README.md"
 authors = [
     { name = "Jivan Enriquez", email = "FerdinandoJr.Enriquez@student.uts.edu.au" }
 ]
-requires-python = ">=3.12.13"
+requires-python = ">=3.12"
 dependencies = [
+    "ipython==9.16.1",
     "pandas==2.2.2",
     "scikit-learn==1.6.1",
 ]
