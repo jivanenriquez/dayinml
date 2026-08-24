@@ -57,3 +57,30 @@ def explore(df):
 
         print("\nDESCRIBE (categorical)")
         display(df[cat_cols].describe() if len(cat_cols) else "none")
+
+def varying_columns(df, keys):
+    """Columns that differ within duplicate `keys` groups.
+
+    Use when a key you believe identifies a row does not. Tells you whether the
+    key is wrong (many columns vary) or the data is dirty (one or two vary).
+
+    Parameters
+    ----------
+    df : DataFrame
+    keys : str or list of str
+        The candidate key.
+
+    Returns
+    -------
+    Series
+        Column name -> number of duplicate groups in which it varies,
+        descending. Empty if `keys` is already unique.
+    """
+    keys = [keys] if isinstance(keys, str) else list(keys)
+    dupes = df[df.duplicated(keys, keep=False)]
+    if dupes.empty:
+        return pd.Series(dtype='int64')
+
+    n_unique = dupes.groupby(keys).nunique(dropna=False)
+    varying = (n_unique > 1).sum()
+    return varying[varying > 0].sort_values(ascending=False)
