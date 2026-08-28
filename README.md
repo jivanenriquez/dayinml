@@ -20,7 +20,7 @@ eda.explore(df)  # shape, duplicates, missingness, describe, sample rows
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for release history.
+See [CHANGELOG.md](https://github.com/jivanenriquez/dayinml/blob/main/CHANGELOG.md) for release history.
 
 ## Contributing
 

@@ -23,6 +23,7 @@ def explore(df):
     print('duplicate rows:', df.duplicated().sum())
 
     # Missing report
+    print('\n--- missing values ---')
     missing = df.isnull().sum().loc[lambda x: x > 0].sort_values(ascending=False)
     missing_report = pd.DataFrame({
         'column': missing.index,
@@ -32,17 +33,23 @@ def explore(df):
     display(missing_report)
 
     # Describe cat cols
+    print('\n--- categorical columns ---')
     display(df.describe(include='object').T)
 
     # Describe num cols
+    print('\n--- numerical columns ---')
     display(df.describe(include='number').T)
 
     # Columns describe doesn't cover
     uncovered = set(df.columns) - set(df.describe(include='number').columns) - set(df.describe(include='object').columns)
+    # uncovered = set(df.columns[:10]) # TEST to see if IF condition works
     if uncovered:
-        print('columns not covered by describe:', uncovered)
+        print('\n--- columns not covered by describe ---')
+        display(df[list(uncovered)].describe(include='all').T)
+
 
     # Check sample rows (powered by the meaning of life)
+    print('\n--- sample rows ---')
     with pd.option_context('display.max_columns', None):
         display(df.sample(5, random_state=42))
     
