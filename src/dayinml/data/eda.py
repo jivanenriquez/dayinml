@@ -9,54 +9,43 @@ from IPython.display import display
 
 
 def explore(df):
-    """Display a standard first-look summary of a dataframe
-
-    For use in a Jupyter notebook. Shows head, shape, info, missing value
-    counts and percentages, duplicate row count, categorical cardinality,
-    and describe (split into numerical and categorical columns).
+    """EDA Starting Point always
 
     Parameters
     ----------
     df : pd.DataFrame
         Input dataframe
     """
+    # Check dataset shape
+    print(f"shape: {df.shape}")
 
-    with pd.option_context("display.max_columns", None, "display.max_rows", None):
-        print("FIRST 5 ROWS")
-        display(df.head(5))
+    # Check for duplicates
+    print('duplicate rows:', df.duplicated().sum())
 
-        print("\nSHAPE")
-        print(df.shape)
+    # Missing report
+    missing = df.isnull().sum().loc[lambda x: x > 0].sort_values(ascending=False)
+    missing_report = pd.DataFrame({
+        'column': missing.index,
+        'missing_count': missing.values,
+        'missing_pct': (missing.values / len(df) * 100).round(2),
+    }).reset_index(drop=True)
+    display(missing_report)
 
-        print("\nINFO")
-        df.info()
+    # Describe cat cols
+    display(df.describe(include='object').T)
 
-        print("\nMISSING VALUES")
-        missing_count = df.isna().sum()
-        missing_count = missing_count[missing_count > 0].sort_values(ascending=False)
-        if missing_count.empty:
-            print("none")
-        else:
-            missing_pct = (missing_count / len(df) * 100).round(2)
-            display(pd.DataFrame({"count": missing_count, "pct": missing_pct}))
+    # Describe num cols
+    display(df.describe(include='number').T)
 
-        print("\nDUPLICATE ROWS")
-        print(df.duplicated().sum())
+    # Columns describe doesn't cover
+    uncovered = set(df.columns) - set(df.describe(include='number').columns) - set(df.describe(include='object').columns)
+    if uncovered:
+        print('columns not covered by describe:', uncovered)
 
-        num_cols = df.select_dtypes(include="number").columns
-        cat_cols = df.select_dtypes(exclude="number").columns
-
-        print("\nCARDINALITY (categorical)")
-        if len(cat_cols):
-            display(df[cat_cols].nunique().sort_values(ascending=False))
-        else:
-            print("none")
-
-        print("\nDESCRIBE (numerical)")
-        display(df[num_cols].describe() if len(num_cols) else "none")
-
-        print("\nDESCRIBE (categorical)")
-        display(df[cat_cols].describe() if len(cat_cols) else "none")
+    # Check sample rows (powered by the meaning of life)
+    with pd.option_context('display.max_columns', None):
+        display(df.sample(5, random_state=42))
+    
 
 def varying_columns(df, keys):
     """Columns that differ within duplicate `keys` groups.

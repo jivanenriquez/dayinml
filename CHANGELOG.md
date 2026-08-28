@@ -1,6 +1,13 @@
 # Changelog
 
 <!--next-version-placeholder-->
+## v0.1.7 (29/08/2026)
+
+- Added change log in README
+
+## v0.1.6 (29/08/2026)
+
+- Simplified eda.explore() function
 
 ## v0.1.4 (21/08/2026)
 

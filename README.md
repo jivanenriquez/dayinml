@@ -10,7 +10,17 @@ $ pip install dayinml
 
 ## Usage
 
-- TODO
+```python
+import pandas as pd
+from dayinml.data import eda
+
+df = pd.read_csv("your_data.csv")
+eda.explore(df)  # shape, duplicates, missingness, describe, sample rows
+```
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for release history.
 
 ## Contributing
 
