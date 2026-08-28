@@ -84,3 +84,50 @@ def varying_columns(df, keys):
     n_unique = dupes.groupby(keys).nunique(dropna=False)
     varying = (n_unique > 1).sum()
     return varying[varying > 0].sort_values(ascending=False)
+
+
+def positive_rate_by(df, by, target='label'):
+    """Count, positive count and positive rate of a binary target within groups.
+
+    Parameters
+    ----------
+    df : DataFrame
+    by : str, list of str, or Series
+        Grouping key. Pass a Series (for example the output of `pd.cut`) to
+        group by buckets built in view of the reader.
+    target : str, default 'label'
+        Binary target column.
+
+    Returns
+    -------
+    DataFrame
+        Indexed by group, with columns `rows`, `positives` and `positive_rate`.
+        `positive_rate` is a float, so the caller formats it at display time.
+    """
+    return df.groupby(by, observed=True)[target].agg(
+        rows='size', positives='sum', positive_rate='mean')
+
+
+def null_rate_by(df, by, min_rate=0.0):
+    """Null share of every column within groups.
+
+    Use to tell missingness that is a property of the rows from missingness
+    that is a property of the group, such as a collection change in one year.
+
+    Parameters
+    ----------
+    df : DataFrame
+    by : str, list of str, or Series
+        Grouping key.
+    min_rate : float, default 0.0
+        Keep only columns whose null share exceeds this in at least one group.
+        Raise it to drop columns that are null in a handful of rows.
+
+    Returns
+    -------
+    DataFrame
+        Group by column, holding the null share as a float.
+    """
+    rates = df.groupby(by, observed=True).apply(
+        lambda g: g.isna().mean(), include_groups=False)
+    return rates.loc[:, rates.max() > min_rate]
