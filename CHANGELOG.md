@@ -1,6 +1,11 @@
 # Changelog
 
 <!--next-version-placeholder-->
+## v0.1.10 (29/08/2026)
+
+- Added explore_feature
+- Added check_consistent
+
 ## v0.1.9 (29/08/2026)
 
 - Added eda.plot_target() to quickly chart target distributions

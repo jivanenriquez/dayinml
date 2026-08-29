@@ -124,6 +124,66 @@ def varying_columns(df, keys):
     varying = (n_unique > 1).sum()
     return varying[varying > 0].sort_values(ascending=False)
 
+def explore_feature(df, feature, target, plot=True):
+    """Describe a feature, its missingness, and its relation to the target.
+
+    Use for a quick first look at a single feature: its distribution,
+    how much of it is missing, and whether it separates the target classes.
+
+    Parameters
+    ----------
+    df : DataFrame
+    feature : str
+        Column to explore.
+    target : str
+        Column to compare `feature` against.
+
+    Returns
+    -------
+    None
+        Displays the describe table and the plot.
+    """
+    print('--- feature describe ---')
+    display(df[feature].describe())
+
+    missing = df[feature].isnull().sum()
+    print('--- missing values ---')
+    print(f'missing: {missing:,} out of {len(df):,} ({missing / len(df) * 100:.2f}%)')
+
+    if plot:
+        print('\n--- relation to target ---')
+        ax = sns.boxplot(x=target, y=feature, data=df)
+        ax.set_title(f'{feature} by {target}')
+
+    plt.tight_layout()
+    plt.show()
+
+def check_consistent(df, key, feature):
+    """Rows where `feature` varies within a `key` group.
+
+    Use to check whether a feature is constant per key
+
+    Parameters
+    ----------
+    df : DataFrame
+    key : str
+        Column to group by.
+    feature : str
+        Column expected to be constant within each `key` group.
+
+    Returns
+    -------
+    DataFrame
+        Rows belonging to any group where `feature` is inconsistent,
+        sorted by `key`.
+    """
+    counts = df.groupby(key)[feature].nunique()
+    inconsistent = counts[counts > 1]
+
+    print(f'{key} groups with inconsistent {feature}:', len(inconsistent))
+    return df[df[key].isin(inconsistent.index)].sort_values(key)[[key, feature]]
+
+
 
 def positive_rate_by(df, by, target='label'):
     """Count, positive count and positive rate of a binary target within groups.
