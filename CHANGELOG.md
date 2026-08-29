@@ -1,6 +1,10 @@
 # Changelog
 
 <!--next-version-placeholder-->
+## v0.1.9 (29/08/2026)
+
+- Added eda.plot_target() to quickly chart target distributions
+
 ## v0.1.8 (29/08/2026)
 
 - Added link to CHANGELOG

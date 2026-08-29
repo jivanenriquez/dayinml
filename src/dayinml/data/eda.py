@@ -5,6 +5,7 @@ Intended for use in a Jupyter notebook
 """
 
 import pandas as pd
+import seaborn as sns
 from IPython.display import display
 
 
@@ -15,6 +16,11 @@ def explore(df):
     ----------
     df : pd.DataFrame
         Input dataframe
+
+    Returns
+    -------
+    None
+        Displays the relevant data in a notebook
     """
     # Check dataset shape
     print(f"shape: {df.shape}")
@@ -52,13 +58,50 @@ def explore(df):
     print('\n--- sample rows ---')
     with pd.option_context('display.max_columns', None):
         display(df.sample(5, random_state=42))
+
+def plot_target(df, target=None):
+    """Bar chart of a target's value counts, with counts and percentages labeled.
+
+    Use for a quick look at class balance, on either a raw column or a
+    per-entity label already collapsed to one row per key.
+
+    Parameters
+    ----------
+    df : DataFrame or Series
+        Series is treated as the target column directly.
+    target : str, optional
+        Column name to plot. Required if `df` is a DataFrame, inferred from
+        `df.name` if `df` is a Series and `target` is not given.
+
+    Returns
+    -------
+    Axes
+        The plot's axes, for further customization (e.g. title, labels).
+    """
+    if isinstance(df, pd.Series):
+        target = target or df.name
+        ax = sns.countplot(x=df)
+    else:
+        if target is None:
+            raise ValueError('target is required when df is a DataFrame')
+        ax = sns.countplot(x=target, data=df)
+
+    total = len(df)
+    for bar in ax.patches:
+        count = bar.get_height()
+        pct = count / total * 100
+        ax.text(bar.get_x() + bar.get_width() / 2, count,
+                f'{count:.0f} ({pct:.1f}%)', ha='center', va='bottom')
+
+    ax.set_title(f'{target} distribution')
+    return ax
     
 
 def varying_columns(df, keys):
     """Columns that differ within duplicate `keys` groups.
 
     Use when a key you believe identifies a row does not. Tells you whether the
-    key is wrong (many columns vary) or the data is dirty (one or two vary).
+    key is wrong (if many columns vary) or the data is dirty (if only one or two vary).
 
     Parameters
     ----------
