@@ -6,6 +6,7 @@ Intended for use in a Jupyter notebook
 
 import pandas as pd
 import seaborn as sns
+import matplotlib.pyplot as plt
 from IPython.display import display
 
 

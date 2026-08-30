@@ -1,10 +1,14 @@
 # Changelog
 
 <!--next-version-placeholder-->
+## v0.1.11 (29/08/2026)
+
+- Fixed plt import in eda
+
 ## v0.1.10 (29/08/2026)
 
-- Added explore_feature
-- Added check_consistent
+- Added eda.explore_feature
+- Added eda.check_consistent
 
 ## v0.1.9 (29/08/2026)
 
